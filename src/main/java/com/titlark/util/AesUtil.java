@@ -1,6 +1,7 @@
 package com.titlark.util;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
@@ -12,6 +13,7 @@ import java.util.Base64;
 /**
  * AES对称加密，采用CBC模式
  */
+@Component
 public class AesUtil {
     private static final String ALGORITHM = "AES";
     @Value("${aes.mode:CBC}")
