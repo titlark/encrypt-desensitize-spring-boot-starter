@@ -1,14 +1,16 @@
 package com.titlark.util;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * AES对称加密，采用CBC模式
@@ -22,29 +24,16 @@ public class AesUtil {
     private String key;
     @Value("${aes.iv:1234567812345678}")
     private String iv;
+    private static AesUtil instance;
 
-    // 1. 使用 volatile 关键字保证内存可见性和禁止指令重排
-    private static volatile AesUtil instance;
-
-    // 2. 私有化构造器，防止外部直接创建实例
-    private AesUtil() {
-        // 防止反射时创建多个实例
-        if (instance != null) {
-            throw new IllegalStateException("Singleton instance already created.");
-        }
+    @PostConstruct
+    public void init() {
+        instance = this;
     }
 
-    // 3. 提供公共的静态方法获取实例
     public static AesUtil getInstance() {
-        // 4. 第一次检查：如果实例已创建，则直接返回
-        if (instance == null) {
-            // 5. 同步块：进入同步块后只有一个线程可以创建实例
-            synchronized (AesUtil.class) {
-                // 6. 第二次检查：防止多个线程在第一次检查时并发创建实例
-                if (instance == null) {
-                    instance = new AesUtil();
-                }
-            }
+        if (instance != null) {
+            throw new IllegalStateException("Singleton instance already created.");
         }
         return instance;
     }

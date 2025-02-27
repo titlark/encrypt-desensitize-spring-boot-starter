@@ -1,12 +1,13 @@
 package com.titlark.config;
 
-import com.titlark.annotation.EncryptField;
-import com.titlark.util.AesUtil;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import com.titlark.annotation.EncryptField;
+import com.titlark.util.AesUtil;
 
 /**
  * 加密脱敏自动配置类
