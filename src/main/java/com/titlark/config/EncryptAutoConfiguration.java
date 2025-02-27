@@ -1,20 +1,25 @@
 package com.titlark.config;
 
+import com.titlark.annotation.EncryptField;
+import com.titlark.util.AesUtil;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
-import com.titlark.annotation.EncryptField;
-import com.titlark.util.AesUtil;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * 加密脱敏自动配置类
  */
 @Configuration
 @Aspect
-@Import(AesUtil.class)
+@EnableConfigurationProperties(EncryptProperties.class)
+@ConditionalOnClass(AesUtil.class)
+@EnableAspectJAutoProxy
+@ComponentScan("com.titlark")
 public class EncryptAutoConfiguration {
 
     /**

@@ -1,16 +1,15 @@
 package com.titlark.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import com.titlark.config.EncryptProperties;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * AES对称加密，采用CBC模式
@@ -18,13 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class AesUtil {
     private static final String ALGORITHM = "AES";
-    @Value("${aes.mode:CBC}")
-    private String mode;
-    @Value("${aes.key:1234567890123456}")
-    private String key;
-    @Value("${aes.iv:1234567812345678}")
-    private String iv;
+    private final String mode;
+    private final String key;
+    private final String iv;
     private static AesUtil instance;
+
+    public AesUtil(EncryptProperties properties) {
+        this.mode = properties.getMode();
+        this.key = properties.getKey();
+        this.iv = properties.getIv();
+    }
 
     @PostConstruct
     public void init() {
@@ -32,9 +34,6 @@ public class AesUtil {
     }
 
     public static AesUtil getInstance() {
-        if (instance != null) {
-            throw new IllegalStateException("Singleton instance already created.");
-        }
         return instance;
     }
 
