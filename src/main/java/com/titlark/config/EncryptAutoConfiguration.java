@@ -6,12 +6,14 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * 加密脱敏自动配置类
  */
 @Configuration
 @Aspect
+@Import(AesUtil.class)
 public class EncryptAutoConfiguration {
 
     /**
