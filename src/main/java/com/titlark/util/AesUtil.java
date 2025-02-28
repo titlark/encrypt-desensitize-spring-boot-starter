@@ -20,12 +20,14 @@ public class AesUtil {
     private final String mode;
     private final String key;
     private final String iv;
+    private final boolean hex;
     private static AesUtil instance;
 
     public AesUtil(EncryptProperties properties) {
         this.mode = properties.getMode();
         this.key = properties.getKey();
         this.iv = properties.getIv();
+        this.hex = properties.isHex();
     }
 
     @PostConstruct
@@ -61,7 +63,8 @@ public class AesUtil {
         }
 
         byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(encrypted);
+        String ciphertext = Base64.getEncoder().encodeToString(encrypted);
+        return hex ? Base64HexConverter.base64ToHex(ciphertext) : ciphertext;
     }
 
     /**
@@ -87,7 +90,7 @@ public class AesUtil {
             throw new IllegalArgumentException("Unsupported mode: " + mode);
         }
 
-        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(hex ? Base64HexConverter.hexToBase64(encryptedData) : encryptedData));
         return new String(decrypted, StandardCharsets.UTF_8);
     }
 }
